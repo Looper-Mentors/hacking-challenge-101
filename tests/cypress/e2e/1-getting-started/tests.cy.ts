@@ -2,35 +2,18 @@
 import cypress from "cypress";
 import axios from "axios";
 
-const play = (password: string, next: string) => {
+const play = (password: string) => {
   cy.get("#pass").clear().type(password);
   cy.get("#sub").click();
-  cy.url().should("include", `/${next}`);
 };
 
 describe("tests", () => {
-  it("redirect", () => {
+  it("game", () => {
     cy.visit("http://localhost:3333");
-    cy.url().should("include", "/first");
-  });
+    play("21");
+    play("121");
+    play("1201");
 
-  it("level 1", () => {
-    cy.visit("http://localhost:3333/first");
-    play("21", "second");
-  });
-
-  it("level 2", () => {
-    cy.visit("http://localhost:3333/second");
-    play("121", "third");
-  });
-
-  it("level 3", () => {
-    cy.visit("http://localhost:3333/third");
-    play("1201", "congrats");
-  });
-
-  it("check image", () => {
-    cy.visit("http://localhost:3333/congrats");
     cy.get("body")
       .find("img")
       .should("have.attr", "src")
@@ -52,7 +35,11 @@ describe("tests", () => {
       console.log(res.status);
     });
 
-    cy.visit("http://localhost:3333/congrats");
+    cy.visit("http://localhost:3333");
+    play("21");
+    play("121");
+    play("1201");
+
     cy.get("body")
       .find("img")
       .should("have.attr", "src")
@@ -70,7 +57,12 @@ describe("tests", () => {
     }).then((res) => {
       console.log(res.status);
     });
-    cy.visit("http://localhost:3333/congrats");
+
+    cy.visit("http://localhost:3333");
+    play("21");
+    play("121");
+    play("1201");
+
     cy.get("body")
       .find("img")
       .should("have.attr", "src")
