@@ -14,14 +14,14 @@
     <script>
       let level = 1;
       const passwords = {
-        1: ["21", "Level-1 Password is 2 digits. 0 , 1 , 2"],
-        2: ["121", "Level-2 Password is 3 digits. 0 , 1 , 2"],
-        3: ["1201", "Level-3 Password is 4 digits. 0 , 1 , 2]"],
+        1: "21",
+        2: "121",
+        3: "1201",
       };
 
       function checkPass() {
         var pass = document.getElementById("pass").value;
-        if (pass === passwords[level][0]) {
+        if (pass === passwords[level]) {
           document.getElementById("pass").value = "";
           level++;
           changeClasses();
