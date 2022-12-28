@@ -1,17 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Level 1!</title>
+    <title id="title">Level 1!</title>
     <link
       rel="icon"
       href="https://static.wixstatic.com/media/91df06_20bfd91c87ae4dbda1c7ff104680f58a%7Emv2_d_1500_1500_s_2.jpg/v1/fill/w_32%2Ch_32%2Clg_1%2Cusm_0.66_1.00_0.01/91df06_20bfd91c87ae4dbda1c7ff104680f58a%7Emv2_d_1500_1500_s_2.jpg"
     />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <!-- import the webpage's javascript file -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script>
+      const animateCSS = (element, animation, prefix = "animate__") =>
+        // We create a Promise and return it
+        new Promise((resolve, reject) => {
+          const animationName = `${prefix}${animation}`;
+          // const element = document.querySelector(element);
+
+          element.classList.add(`${prefix}animated`, animationName);
+
+          // When the animation ends, we clean the classes and resolve the Promise
+          function handleAnimationEnd(event) {
+            event.stopPropagation();
+            element.classList.remove(`${prefix}animated`, animationName);
+            resolve("Animation ended");
+          }
+
+          element.addEventListener("animationend", handleAnimationEnd, {
+            once: true,
+          });
+        });
+
       let level = 1;
       const passwords = {
         1: "21",
@@ -25,11 +47,14 @@
           document.getElementById("pass").value = "";
           level++;
           changeClasses();
+        } else {
+          animateCSS(document.getElementById("pass"), "shakeX");
         }
       }
 
       async function changeClasses() {
         if (level < 4) {
+          document.getElementById("title").innerHTML = `level ${level}!`;
           const hdr = document.getElementById("hdr");
           console.log(hdr.classList);
           hdr.classList.add(`header${level}`);
@@ -39,6 +64,7 @@
           sub.classList.add(`btn${level}`);
           sub.classList.remove(`btn${level - 1}`);
         } else {
+          document.getElementById("title").innerHTML = `Congratulations 🚀🚀`;
           let img;
           await fetch("/image")
             .then((response) => response.json())
@@ -51,28 +77,28 @@
           console.log(img);
 
           document.getElementById("game").innerHTML = `
-          <style>
-      body {
-        font-family: "Benton Sans", "Helvetica Neue", helvetica, arial,
-          sans-serif;
-        margin: 2em;
-        background: black;
-      }
+            <style>
+        body {
+          font-family: "Benton Sans", "Helvetica Neue", helvetica, arial,
+            sans-serif;
+          margin: 2em;
+          background: black;
+        }
 
-      h1 {
-        font-style: italic;
-        color: #fff;
-      }
+        h1 {
+          font-style: italic;
+          color: #fff;
+        }
 
-      #congrats {
-        width: 50%;
-      }
-    </style>
-          <center>
-            <h1>Congratulations!</h1>
-            <img id="congrats" src=${img} />
-          </center>
-            `;
+        #congrats {
+          width: 50%;
+        }
+      </style>
+            <center>
+              <h1>Congratulations!</h1>
+              <img id="congrats" src=${img} />
+            </center>
+              `;
         }
       }
 
@@ -83,8 +109,9 @@
       }
     </script>
     <style>
-      /* CSS files add styling rules to your content */
-
+      .animate__animated {
+        --animate-duration: 0.5s;
+      }
       body {
         font-family: "Benton Sans", "Helvetica Neue", helvetica, arial,
           sans-serif;
