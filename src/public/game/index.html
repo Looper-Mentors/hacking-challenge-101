@@ -1,79 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <title id="title">Level 1!</title>
+    <link
+      rel="icon"
+      href="https://static.wixstatic.com/media/91df06_20bfd91c87ae4dbda1c7ff104680f58a%7Emv2_d_1500_1500_s_2.jpg/v1/fill/w_32%2Ch_32%2Clg_1%2Cusm_0.66_1.00_0.01/91df06_20bfd91c87ae4dbda1c7ff104680f58a%7Emv2_d_1500_1500_s_2.jpg"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script>
+      const animateCSS = (element, animation, prefix = "animate__") =>
+        // We create a Promise and return it
+        new Promise((resolve, reject) => {
+          const animationName = `${prefix}${animation}`;
+          // const element = document.querySelector(element);
 
-<head>
-  <title id="title">Level 1!</title>
-  <link rel="icon"
-    href="https://static.wixstatic.com/media/91df06_20bfd91c87ae4dbda1c7ff104680f58a%7Emv2_d_1500_1500_s_2.jpg/v1/fill/w_32%2Ch_32%2Clg_1%2Cusm_0.66_1.00_0.01/91df06_20bfd91c87ae4dbda1c7ff104680f58a%7Emv2_d_1500_1500_s_2.jpg" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
-  <meta charset="utf-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <script>
-    const animateCSS = (element, animation, prefix = "animate__") =>
-      // We create a Promise and return it
-      new Promise((resolve, reject) => {
-        const animationName = `${prefix}${animation}`;
-        // const element = document.querySelector(element);
+          element.classList.add(`${prefix}animated`, animationName);
 
-        element.classList.add(`${prefix}animated`, animationName);
+          // When the animation ends, we clean the classes and resolve the Promise
+          function handleAnimationEnd(event) {
+            event.stopPropagation();
+            element.classList.remove(`${prefix}animated`, animationName);
+            resolve("Animation ended");
+          }
 
-        // When the animation ends, we clean the classes and resolve the Promise
-        function handleAnimationEnd(event) {
-          event.stopPropagation();
-          element.classList.remove(`${prefix}animated`, animationName);
-          resolve("Animation ended");
-        }
-
-        element.addEventListener("animationend", handleAnimationEnd, {
-          once: true,
-        });
-      });
-
-    let level = 1;
-    const passwords = {
-      1: "21",
-      2: "121",
-      3: "1201",
-    };
-
-    function checkPass() {
-      var pass = document.getElementById("pass").value;
-      if (pass === passwords[level]) {
-        document.getElementById("pass").value = "";
-        level++;
-        changeClasses();
-      } else {
-        animateCSS(document.getElementById("pass"), "shakeX");
-      }
-    }
-
-    async function changeClasses() {
-      if (level < 4) {
-        document.getElementById("title").innerHTML = `level ${level}!`;
-        const hdr = document.getElementById("hdr");
-        hdr.innerHTML = `Level-${level} Password is ${level+1} digits. 0, 1 , 2`
-        console.log(hdr.classList);
-        hdr.classList.add(`header${level}`);
-        hdr.classList.remove(`header${level - 1}`);
-
-        const sub = document.getElementById("sub");
-        sub.classList.add(`btn${level}`);
-        sub.classList.remove(`btn${level - 1}`);
-      }else {
-        document.getElementById("title").innerHTML = `Congratulations 🚀🚀`;
-        let img;
-        await fetch("/image")
-          .then((response) => response.json())
-          .then((data) => {
-            img = data.url;
-          })
-          .catch((error) => {
-            console.error(error);
+          element.addEventListener("animationend", handleAnimationEnd, {
+            once: true,
           });
-        console.log(img);
+        });
 
-        document.getElementById("game").innerHTML = `
+      let level = 1;
+      const passwords = {
+        1: "21",
+        2: "121",
+        3: "1201",
+      };
+
+      function checkPass() {
+        var pass = document.getElementById("pass").value;
+        if (pass === passwords[level]) {
+          document.getElementById("pass").value = "";
+          level++;
+          changeClasses();
+        } else {
+          animateCSS(document.getElementById("pass"), "shakeX");
+        }
+      }
+
+      async function changeClasses() {
+        if (level < 4) {
+          document.getElementById("title").innerHTML = `level ${level}!`;
+          const hdr = document.getElementById("hdr");
+          hdr.innerHTML = `Level-${level} Password is ${
+            level + 1
+          } digits. 0, 1 , 2`;
+          console.log(hdr.classList);
+          hdr.classList.add(`header${level}`);
+          hdr.classList.remove(`header${level - 1}`);
+
+          const sub = document.getElementById("sub");
+          sub.classList.add(`btn${level}`);
+          sub.classList.remove(`btn${level - 1}`);
+        } else {
+          document.getElementById("title").innerHTML = `Congratulations 🚀🚀`;
+          let img;
+          await fetch("/image")
+            .then((response) => response.json())
+            .then((data) => {
+              img = data.url;
+            })
+            .catch((error) => {
+              console.error(error);
+            });
+          console.log(img);
+
+          document.getElementById("game").innerHTML = `
             <style>
         body {
           font-family: "Benton Sans", "Helvetica Neue", helvetica, arial,
@@ -95,163 +101,170 @@
               <h1>Congratulations!</h1>
               <img id="congrats" src=${img} />
             </center>`;
-      }
-    }
-
-    function runScript(e) {
-      if (e.keyCode == 13) {
-        checkPass();
-      }
-    }
-  </script>
-  <style>
-    .animate__animated {
-      --animate-duration: 0.5s;
-    }
-
-    body {
-      font-family: "Benton Sans", "Helvetica Neue", helvetica, arial,
-        sans-serif;
-      margin: 2em;
-    }
-
-    h1 {
-      font-style: italic;
-    }
-
-    .header1 {
-      color: #373fff;
-    }
-
-    .header2 {
-      color: #4eed39;
-    }
-
-    .header3 {
-      color: #edba39;
-    }
-
-    input[type="password"] {
-      width: 100%;
-      padding: 12px 20px;
-      margin: 8px 0;
-      box-sizing: border-box;
-      border-radius: 4px;
-    }
-
-    .inp1 {
-      border: 2px solid #34b1eb;
-    }
-
-    .inp2 {
-      border: 2px solid #4eed39;
-    }
-
-    .inp3 {
-      border: 2px solid #edba39;
-    }
-
-    .button {
-      border: none;
-      color: white;
-      padding: 15px 32px;
-      text-align: center;
-      display: inline-block;
-      font-size: 16px;
-      margin: 4px 2px;
-      cursor: pointer;
-    }
-
-    .btn1 {
-      background-color: #34b1eb;
-    }
-
-    .btn2 {
-      background-color: #4eed39;
-    }
-
-    .btn3 {
-      background-color: #edba39;
-    }
-
-    .button3 {
-      width: 100%;
-    }
-
-    @keyframes shake {
-      0% {
-        transform: translate(1px, 1px) rotate(0deg);
+        }
       }
 
-      10% {
-        transform: translate(-1px, -2px) rotate(-1deg);
+      function runScript(e) {
+        if (e.keyCode == 13) {
+          checkPass();
+        }
+      }
+    </script>
+    <style>
+      .animate__animated {
+        --animate-duration: 0.5s;
       }
 
-      20% {
-        transform: translate(-3px, 0px) rotate(1deg);
+      body {
+        font-family: "Benton Sans", "Helvetica Neue", helvetica, arial,
+          sans-serif;
+        margin: 2em;
       }
 
-      30% {
-        transform: translate(3px, 2px) rotate(0deg);
+      h1 {
+        font-style: italic;
       }
 
-      40% {
-        transform: translate(1px, -1px) rotate(1deg);
+      .header1 {
+        color: #373fff;
       }
 
-      50% {
-        transform: translate(-1px, 2px) rotate(-1deg);
+      .header2 {
+        color: #4eed39;
       }
 
-      60% {
-        transform: translate(-3px, 1px) rotate(0deg);
+      .header3 {
+        color: #edba39;
       }
 
-      70% {
-        transform: translate(3px, 1px) rotate(-1deg);
+      input[type="password"] {
+        width: 100%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        box-sizing: border-box;
+        border-radius: 4px;
       }
 
-      80% {
-        transform: translate(-1px, -1px) rotate(1deg);
+      .inp1 {
+        border: 2px solid #34b1eb;
       }
 
-      90% {
-        transform: translate(1px, 2px) rotate(0deg);
+      .inp2 {
+        border: 2px solid #4eed39;
       }
 
-      100% {
-        transform: translate(1px, -2px) rotate(-1deg);
+      .inp3 {
+        border: 2px solid #edba39;
       }
-    }
 
-    .img {
-      position: absolute;
-      right: 0px;
-      bottom: 0px;
-      width: 10%;
-    }
-  </style>
-</head>
+      .button {
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+      }
 
-<body>
-  <center>
-    <div id="game">
-      <div id="header">
-        <h1 id="hdr" class="header1">
-          Level-1 Password is 2 digits. 0, 1 , 2
-        </h1>
+      .btn1 {
+        background-color: #34b1eb;
+      }
+
+      .btn2 {
+        background-color: #4eed39;
+      }
+
+      .btn3 {
+        background-color: #edba39;
+      }
+
+      .button3 {
+        width: 100%;
+      }
+
+      @keyframes shake {
+        0% {
+          transform: translate(1px, 1px) rotate(0deg);
+        }
+
+        10% {
+          transform: translate(-1px, -2px) rotate(-1deg);
+        }
+
+        20% {
+          transform: translate(-3px, 0px) rotate(1deg);
+        }
+
+        30% {
+          transform: translate(3px, 2px) rotate(0deg);
+        }
+
+        40% {
+          transform: translate(1px, -1px) rotate(1deg);
+        }
+
+        50% {
+          transform: translate(-1px, 2px) rotate(-1deg);
+        }
+
+        60% {
+          transform: translate(-3px, 1px) rotate(0deg);
+        }
+
+        70% {
+          transform: translate(3px, 1px) rotate(-1deg);
+        }
+
+        80% {
+          transform: translate(-1px, -1px) rotate(1deg);
+        }
+
+        90% {
+          transform: translate(1px, 2px) rotate(0deg);
+        }
+
+        100% {
+          transform: translate(1px, -2px) rotate(-1deg);
+        }
+      }
+
+      .img {
+        position: absolute;
+        right: 0px;
+        bottom: 0px;
+        width: 10%;
+      }
+    </style>
+  </head>
+
+  <body>
+    <center>
+      <div id="game">
+        <div id="header">
+          <h1 id="hdr" class="header1">
+            Level-1 Password is 2 digits. 0, 1 , 2
+          </h1>
+        </div>
+        <input
+          type="password"
+          id="pass"
+          name="pass"
+          onkeypress="runScript(event)"
+        />
+        <div id="subDV">
+          <button id="sub" class="button btn1 button3" onclick="checkPass()">
+            <b>[ { --- Try to Hack --- } ]</b>
+          </button>
+        </div>
       </div>
-      <input type="password" id="pass" name="pass" onkeypress="runScript(event)" />
-      <div id="subDV">
-        <button id="sub" class="button btn1 button3" onclick="checkPass()">
-          <b>[ { --- Try to Hack --- } ]</b>
-        </button>
-      </div>
-    </div>
-  </center>
-  <a href="https://www.loop.org.il"><img
-      src="https://static.wixstatic.com/media/91df06_bd1988a2cb234c9cbe27d7d3ddb10069~mv2.png" align="bottom|right"
-      class="img" /></a>
-</body>
-
+    </center>
+    <a href="https://www.loop.org.il"
+      ><img
+        src="https://static.wixstatic.com/media/91df06_bd1988a2cb234c9cbe27d7d3ddb10069~mv2.png"
+        align="bottom|right"
+        class="img"
+    /></a>
+  </body>
 </html>
