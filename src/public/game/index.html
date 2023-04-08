@@ -36,10 +36,23 @@
 
       let level = 1;
       const passwords = {
-        1: "21",
-        2: "121",
-        3: "1201",
+        1: generatePassword(2),
+        2: generatePassword(3),
+        3: generatePassword(4),
       };
+
+      function generatePassword(length) {
+        let password = "";
+        const chars = "012";
+
+        for (let i = 0; i < length; i++) {
+          password += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+
+        return password;
+      }
+      
+      console.log(passwords);
 
       function checkPass() {
         var pass = document.getElementById("pass").value;
